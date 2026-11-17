@@ -1,15 +1,10 @@
 #include <cuda_runtime.h>
 
 __global__ void leaky_relu_kernel(const float* input, float* output, float alpha, int N) {
-    // Write the float32 results into output; this kernel returns no value
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if ( i < N){
-       if( input[i] >= 0){
-           output[i] = input[i];
-       }
-        else{
-            output[i] = alpha * input[i];
-        }
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < N) {
+        float v = input[idx];
+        output[idx] = v > 0.0f ? v : alpha * v;
     }
 }
 
